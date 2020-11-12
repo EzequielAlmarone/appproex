@@ -5,7 +5,7 @@ import { Container } from './styles';
 export default function Indicator() {
     return (
         <Container>
-            <ActivityIndicator size="large" color="#56A548" />
+            <ActivityIndicator size="large" color="#04BF9D" />
         </Container>
     )
 }

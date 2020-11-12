@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
-import Background from '../../components/Background';
 
 import { Container, List, AcaoView, Titulo, Descricao, Bairro, DataView, Data, Label } from './styles';
 
@@ -79,31 +78,26 @@ export default function Acao() {
 
 
     return (
-        <Background>
-            <Container>
-                {acoes && (
-                    <List
-                        data={acoes}
-                        keyExtractor={item => item.acao.id}
-                        renderItem={({ item: acao }) => (
-                            <AcaoView>
-                                <Titulo>{acao.acao.titulo}</Titulo>
-                                <Descricao>{acao.acao.descricao}</Descricao>
-                                <Bairro> <Label>Bairro: </Label> {acao.acao.bairro.nome}</Bairro>
-                                <DataView>
-                                    <Data> realização: {acao.acao.acaoBairro.data}</Data>
-                                </DataView>
-                            </AcaoView>
-                        )}
-                    />
+        <Container>
+            {acoes && (
+                <List
+                    data={acoes}
+                    keyExtractor={item => item.acao.id}
+                    renderItem={({ item: acao }) => (
+                        <AcaoView>
+                            <Titulo>{acao.acao.titulo}</Titulo>
+                            <Descricao>{acao.acao.descricao}</Descricao>
+                            <Bairro> <Label>Bairro: </Label> {acao.acao.bairro.nome}</Bairro>
+                            <DataView>
+                                <Data> realização: {acao.acao.acaoBairro.data}</Data>
+                            </DataView>
+                        </AcaoView>
+                    )}
+                />
 
-                )}
+            )}
 
-            </Container>
-
-
-
-        </Background>
+        </Container>
     )
 
 }

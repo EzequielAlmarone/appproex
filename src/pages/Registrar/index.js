@@ -1,136 +1,100 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { Alert, Image } from 'react-native';
-import api from '../../services/api';
-
+import React, { useRef, useState, useEffect, useContext } from 'react';
+import { ActivityIndicator } from 'react-native';
+import { AuthContext } from '../../contexts/auth';
 import Picker from '../../components/Picker';
-import ActivityIndicator from '../../components/Indicator';
-import logo from '../../assets/Logo.png';
-import Background from '../../components/Background';
+import imgLogo from '../../assets/Logo.png';
+import * as Animatable from 'react-native-animatable';
 import { Container, Form, FormInput, SubmitButton, LinkRegistrar, LinkRegistrarText } from './styles';
 
 export default function Registrar({ navigation }) {
-
+    const { signUp, listBairros, loadingAuth } = useContext(AuthContext);
     const emailRef = useRef();
-    const bairroRef = useRef();
-    const ruaRef = useRef();
     const passwordRef = useRef();
 
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
-    const [bairro, setBairro] = useState('');
-    const [rua, setRua] = useState('');
+    const [bairro, setBairro] = useState(0);
     const [password, setPassword] = useState('');
     const [bairros, setBairros] = useState(null);
-    const [bairroItem, setBairroItem] = useState(null);
-    const [loading, setLoading] = useState(false);
-    function handleSubmit() {
-
-    }
+    const [loading, setLoading] = useState(true);
 
 
     useEffect(() => {
-        async function handleBairros() {
-            await api.get('bairros')
-                .then((response) => setBairros(response.data),
-                    setLoading(true)
-                )
-                .catch((err) => {
 
-                    console.error("ops! ocorreu um erro" + err);
-                });
+        if (listBairros) {
+            setBairros(listBairros);
 
-            console.log(response.data);
         }
+    }, [listBairros]);
 
-        handleBairros();
-    }, []);
-
-    function handleBairroItem() {
-
-        let bairroItem = bairros ? bairros.map((v, k) => {
-            return <Picker.Item key={k} value={k} label={v.nome} />
-        }) : '';
-        setBairroItem(bairroItem);
-        console.log(bairroItem);
-    }
     if (!bairros) {
-
-        return <ActivityIndicator />
+        return <ActivityIndicator/>
     }
     if (bairros && loading) {
-        handleBairroItem();
+        console.log("Bairros")
         setLoading(false);
     }
+    function handleSubmit() {
+        signUp(nome, email, bairro, password);
+        //navigation.navigate('Home');
+    }
+
     return (
-        //<Background>
-        <Background colors={['#fff']}>
-            <Container
-                behavior={Platform.OS === 'ios' ? 'padding' : ''}
-                enabled
-            >
-                <Image source={logo} style={{ width: 100, height: 100, borderRadius: 50 }} />
+        <Container
+            behavior={Platform.OS === 'ios' ? 'padding' : ''}
+            enabled
+        >
+            <Animatable.Image animation="fadeInDownBig" source={imgLogo} />
 
-                <Form>
-                    <FormInput
-                        icon="person-outline"
-                        autoCorrect={false}
-                        autoCapitalize="none"
-                        placeholder="Informe  seu nome"
-                        returnKeyType="next"
-                        onSubmitEditing={() => emailRef.current.focus()}
-                        value={nome}
-                        onChangeText={setNome}
+            <Form>
+                <FormInput
+                    icon="person-outline"
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    placeholder="Informe  seu nome"
+                    returnKeyType="next"
+                    onSubmitEditing={() => emailRef.current.focus()}
+                    value={nome}
+                    onChangeText={setNome}
 
-                    />
-                    <FormInput
-                        icon="mail-outline"
-                        keyboardType="email-address"
-                        autoCorrect={false}
-                        autoCapitalize="none"
-                        placeholder="Informe seu e-mail"
-                        ref={emailRef}
-                        returnKeyType="next"
-                        onSubmitEditing={() => bairroRef.current.focus()}
-                        value={email}
-                        onChangeText={setEmail}
-                    />
+                />
+                <FormInput
+                    icon="mail-outline"
+                    keyboardType="email-address"
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    placeholder="Informe seu e-mail"
+                    ref={emailRef}
+                    returnKeyType="next"
+                    onSubmitEditing={() => passwordRef.current.focus()}
+                    value={email}
+                    onChangeText={setEmail}
+                />
 
-                    {
-                        /*
-                            <FormInput
-                            icon="my-location"
-                            autoCorrect={false}
-                            autoCapitalize="none"
-                            placeholder="Informe sua rua"
-                            ref={ruaRef}
-                            returnKeyType="next"
-                            onSubmitEditing={() => passwordRef.current.focus()}
-                            value={rua}
-                            onChangeText={setRua}
-        
-                        />
-                        */
-                    }
+                <Picker onChange={setBairro} tipo={bairro} bairros={bairros} />
 
-                    <Picker onChange={setBairro} tipo={bairro} bairroItem={bairroItem} />
-                    <FormInput
-                        icon="lock-outline"
-                        secureTextEntry
-                        placeholder="Digite sua senha"
-                        ref={passwordRef}
-                        returnKeyType="send"
-                        onSubmitEditing={handleSubmit}
-                        value={password}
-                        onChangeText={setPassword}
-                    />
+                <FormInput
+                    icon="lock-outline"
+                    secureTextEntry
+                    placeholder="Digite sua senha"
+                    ref={passwordRef}
+                    returnKeyType="send"
+                    onSubmitEditing={handleSubmit}
+                    value={password}
+                    onChangeText={setPassword}
+                />
 
-                    <SubmitButton onPress={handleSubmit}> Cadastrar</SubmitButton>
-                </Form>
-                <LinkRegistrar onPress={() => navigation.navigate('Home')}>
-                    <LinkRegistrarText>Já tenho conta</LinkRegistrarText>
-                </LinkRegistrar>
-            </Container>
-        </Background >
+                <SubmitButton
+                 onPress={handleSubmit}
+                 loading={loadingAuth}
+                 >
+                        Cadastrar      
+                 </SubmitButton>
+            </Form>
+            <LinkRegistrar onPress={() => navigation.goBack()}>
+                <LinkRegistrarText>Já tenho conta</LinkRegistrarText>
+            </LinkRegistrar>
+        </Container>
 
     );
 }

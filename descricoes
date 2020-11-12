@@ -1,0 +1,9 @@
+// biblioteca Vector icons 
+// pasta para adicionar fonte "android/app/build.gradle"
+ - 'MaterialIcons.ttf', 
+ - 'Feather.ttf', 
+ - 'MaterialCommunityIcons.ttf', 
+ - 'FontAwesome.ttf'
+
+
+ 

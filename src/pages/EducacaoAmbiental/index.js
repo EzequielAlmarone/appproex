@@ -1,29 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
-import Background from '../../components/Background';
+import { SliderBox } from "react-native-image-slider-box";
+import { Container, List, EducacaoView, Titulo, Autor, ImageView, Descricao, DataView, Data } from './styles';
 
-import { Container, List, EducacaoView, Titulo, ImageView, ImageList, Foto, Descricao, DataView, Data } from './styles';
-
-export default function EducacaoAmbiental() {
-
+export default function EducacaoAmbiental({ navigation }) {
     const [educacoes, setEducacoes] = useState([
-        {
-            educacao: {
-                id: 1,
+      
+                {
+                    id: 1,
                 titulo: "Horta Organica",
-                fotos:
-                    "../../assets/apresentacao.png"
-                ,
-                descricao: "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
+                autor: "Gerência de Meio Ambiente",
+                fotos: [
+                    require("../../assets/Background.png"),
+                    require("../../assets/Logo.png"),         
+                    require('../../assets/Logo.png'),
+                    'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?cs=srgb&dl=pexels-chevanon-photography-1108099.jpg&fm=jpg',
+                     ],
+                descricao: "    Apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
                     + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
                     + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
                     + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
                     + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
                     + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí",
                 data: "12/09/2020"
-            }
-        },
+                },
+                {
+                    id: 2,
+                titulo: "Horta Organica",
+                autor: "Gerência de meio Ambiente",
+                fotos: [
+                    'https://images.pexels.com/photos/1660027/pexels-photo-1660027.jpeg?cs=srgb&dl=pexels-elle-hughes-1660027.jpg&fm=jpg',         
+                    'https://images.pexels.com/photos/1400172/pexels-photo-1400172.jpeg?cs=srgb&dl=pexels-adonyi-g%C3%A1bor-1400172.jpg&fm=jpg',
+                    'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?cs=srgb&dl=pexels-chevanon-photography-1108099.jpg&fm=jpg',
+                     ],
+                descricao: "    Apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
+                    + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
+                    + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
+                    + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
+                    + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
+                    + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí",
+                data: "12/09/2020"
+                }
     ]);
+
 
     useEffect(() => {
         async function handleBuscarEducacoes() {
@@ -37,54 +56,39 @@ export default function EducacaoAmbiental() {
         // handleBuscarEducacoes();
     }, []);
 
-    function handleFotoItem(fotos) {
-
-        return fotos ? fotos.map((v, k) => {
-            return (<Image source={v.uri} />);
-            console.log(v.uri);
-        }) : '';
-    }
-
     return (
-        <Background>
-            <Container>
-                {educacoes && (
-                    <List
-                        data={educacoes}
-                        keyExtractor={item => item.educacao.id}
-                        renderItem={({ item: educacao }) => (
-                            <EducacaoView>
-                                <Titulo>{educacao.educacao.titulo}</Titulo>
-                                <Foto source={require('../../assets/apresentacao.png')} />
-                                {educacao.educacao.fotos &&
-                                    (
-                                        <ImageList>
-                                            <ImageView>
-                                                {
-                                                    //handleFotoItem(educacao.educacao.fotos)
-                                                    console.log(educacao.educacao.fotos)
-                                                }
-                                                <Foto source={require('../../assets/apresentacao.png')} />
-                                                <Foto source={require('../../assets/apresentacao.png')} />
-                                                <Foto source={require('../../assets/apresentacao.png')} />
-                                                <Foto source={require('../../assets/apresentacao.png')} />
-                                                <Foto source={require('../../assets/apresentacao.png')} />
-                                                <Descricao>{educacao.educacao.descricao}</Descricao>
-                                                <Foto source={require('../../assets/apresentacao.png')} />
-                                            </ImageView>
-                                        </ImageList>
-                                    )
-                                }
-                                <Descricao>{educacao.educacao.descricao}</Descricao>
-                                <DataView>
-                                    <Data> publicação: {educacao.educacao.data}</Data>
-                                </DataView>
-                            </EducacaoView>
-                        )}
-                    />
-                )}
-            </Container>
-        </Background>
+        <Container>
+            {educacoes && (
+                <List
+                    data={educacoes}
+                    keyExtractor={item => item.id}
+                    renderItem={({ item: educacao }) => (
+                        <EducacaoView>
+                            <Titulo>{educacao.titulo}</Titulo> 
+                            <Autor>Autor: {educacao.autor}</Autor>
+                            {educacao.fotos &&
+                            (                            
+                            <ImageView>
+                                <SliderBox images={educacao.fotos}
+                                    resizeMode={'contain'}
+                                    resizeMethod={'resize'} 
+                                    dotColor = "#c1c1c1" //cor do ponto de paginação
+                                    inactiveDotColor = "#4d4c4a" // cor dos pontos de paginações inativos
+                                    imageLoadingColor = "#04BF9D" // cor do loading da imagem
+                                    ImageComponentStyle = {{borderRadius: 15}} // borda imagem
+                                />
+                            </ImageView>       
+                            )
+                            }
+                            <Descricao>{educacao.descricao}</Descricao>
+                            <DataView>
+                                <Data> publicação: {educacao.data}</Data>
+                            </DataView>
+                        </EducacaoView>
+                    )}
+                /> 
+            )}
+        </Container>
     )
 
 }

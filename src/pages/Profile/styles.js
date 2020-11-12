@@ -5,13 +5,23 @@ import Button from '../../components/Button';
 export const Container = styled.KeyboardAvoidingView`
     flex: 1;
     justify-content: center;
-    align-items: center;
-    padding: 0 30px;
+`;
+
+export const ButtonBack = styled.TouchableOpacity`
+margin-left: 15px;
+
+`;
+export const Title = styled.Text`
+font-size: 20px;
+font-weight: bold;
+margin-left: 32px;
+color: #04BF9D;
 `;
 
 export const Form = styled.View`
     align-self: stretch;
     margin-top: 50px;
+    padding: 0 30px;
 `;
 
 export const FormInput = styled(Input)`
@@ -20,16 +30,4 @@ export const FormInput = styled(Input)`
 
 export const SubmitButton = styled(Button)`
    margin-top: 15px;
-
-`;
-
-export const LinkRegistrar = styled.TouchableOpacity`
-    margin-top: 20px;
-`;
-
-export const LinkRegistrarText = styled.Text`
-    color: #04BF9D;
-    font-size: 24px;
-    font-weight: bold;
-
 `;

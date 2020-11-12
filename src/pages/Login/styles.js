@@ -26,7 +26,7 @@ margin-top: 20px;
 `;
 
 export const LinkRegistrarText = styled.Text`
-color: #fff;
+color: #04BF9D;
 font-weight: bold;
-font-size: 18px;
+font-size: 24px;
 `;

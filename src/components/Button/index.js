@@ -3,7 +3,7 @@ import React from 'react';
 import { ActivityIndicator } from 'react-native';
 import PropTypes from 'prop-types';
 import { Container, Text } from './styles';
-function Button({ children, loading, ...rest }) {
+function Button({ children, loading, ...rest}) {
     return (
         <Container {...rest}>
             { loading
