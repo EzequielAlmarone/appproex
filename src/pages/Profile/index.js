@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useLayoutEffect } from 'react';
-import { Alert } from 'react-native';
+import { Alert , Keyboard } from 'react-native';
 import Picker from '../../components/Picker';
 import ActivityIndicator from '../../components/Indicator';
 import  { AuthContext } from '../../contexts/auth';
@@ -7,10 +7,10 @@ import Feather from 'react-native-vector-icons/Feather';
 import { Container, ButtonBack, Form, FormInput, SubmitButton} from './styles';
 
 export default function Profile({ navigation }) {
-    const { user, listBairros, signOut, signUpdate} = useContext(AuthContext);
+    const { user, listBairros, signOut, signUpdate, loadingUpdate} = useContext(AuthContext);
     const [nome, setNome] = useState(user.nome);
     const [email, setEmail] = useState(user.email);
-    const [bairro, setBairro] = useState(user.bairro.id);
+    const [bairro, setBairro] = useState(user.bairro.id ? user.bairro.id -1 : 0);
     const [bairros, setBairros] = useState(null)
     const [loading, setLoading] = useState(true);
     const [hasUnsavedChanges, setHasUnsavedChanges ] = useState(false);
@@ -31,14 +31,15 @@ export default function Profile({ navigation }) {
     
     // verifica a lista de bairros
     useEffect(() => {
+        console.log(user);
         if (listBairros) {
             setBairros(listBairros);
         }
-    }, [listBairros]);
+    }, [listBairros, user]);
 
     // verificando a alterações nos campos
     useEffect(() => {
-        if(nome !== user.nome || email !== user.email || bairro !== user.bairro.id){
+        if(nome !== user.nome || email !== user.email || bairro !== user.bairro.id-1){
             setHasUnsavedChanges(true);
         }else{
             setHasUnsavedChanges(false);
@@ -48,7 +49,6 @@ export default function Profile({ navigation }) {
     //verifica se teve alteração quando o usuario desejar volta sem salvar
     useEffect(() => {
         navigation.addListener('beforeRemove', (e) => {
-            console.log('Before');
             if(!hasUnsavedChanges){   
                 return;
             }
@@ -76,6 +76,7 @@ export default function Profile({ navigation }) {
     }
 
     function handleSubmit(){
+        Keyboard.dismiss();
         signUpdate(nome, bairro);
     }
 
@@ -98,6 +99,7 @@ export default function Profile({ navigation }) {
                     onChangeText={setNome}
                 />
                 <FormInput
+                    style={{backgroundColor: '#E9E8E5'}}
                     icon="mail-outline"
                     keyboardType="email-address"
                     autoCorrect={false}
@@ -110,7 +112,7 @@ export default function Profile({ navigation }) {
                     onChangeText={setEmail}
                 />
                 <Picker onChange={setBairro} tipo={bairro} bairros={bairros} />
-                <SubmitButton onPress={handleSubmit}>Atualizar</SubmitButton>
+                <SubmitButton loading={loadingUpdate} onPress={handleSubmit}>Atualizar</SubmitButton>
                 <SubmitButton bg='#F35555' onPress={handleSignOut}>Sair</SubmitButton>
             </Form>
         </Container>

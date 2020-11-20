@@ -1,4 +1,5 @@
 import React, { useState, createContext, useEffect } from 'react';
+import {ToastAndroid } from 'react-native';
 
 import api from '../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -11,6 +12,7 @@ function AuthProvider({ children }) {
     const[loadingBairro, setLoadingBairro] = useState(true);
     const [loading, setLoading] = useState(true);
     const [loadingAuth, setLoadingAuth] = useState(false);
+    const [loadingUpdate, setLoadingUpdate] = useState(false);
 
 
     useEffect(() => {
@@ -51,13 +53,17 @@ function AuthProvider({ children }) {
         loadStorageUser();
     }, []);
 
+    //Função toast messagem
+        const showToast = (message) => {
+          ToastAndroid.show(message, ToastAndroid.SHORT);
+        };
 
     // Função de Login 
     async function signIn(email, password) {
         console.log("login");
         if( email && password ){
             setLoadingAuth(true);
-            api.post("usuarios/autenticar", {
+             api.post("usuarios/autenticar", {
                 email: email,
                 senha: password,
             }).then((response)=>{
@@ -67,7 +73,7 @@ function AuthProvider({ children }) {
             }).catch( (error) => {
                 alert(error);
                 setLoadingAuth(false);
-            })
+            }) 
         }else{
             alert("Preencha os campos corretamente!")
         }
@@ -78,7 +84,7 @@ function AuthProvider({ children }) {
         console.log("bairro signup: " + bairro);
         if(nome && email && password){
             setLoadingAuth(true);
-            api.post("usuarios", {
+             api.post("usuarios", {
                 nome: nome,
                 email: email,
                 bairro:listBairros[bairro],
@@ -90,7 +96,7 @@ function AuthProvider({ children }) {
             }).catch((error) => {
                 alert(error);
                 setLoadingAuth(false);
-            })
+            }) 
         }else{
             alert("preencha os campos corretamente!");
         }
@@ -105,6 +111,7 @@ function AuthProvider({ children }) {
 
     //função atualizar o usuário 
      async function signUpdate(nomeUp,bairroUp){
+            setLoadingUpdate(true);
             const { id, email, senha} = user
             api.put(`usuarios/${id}`, {
                 id: id,
@@ -116,6 +123,13 @@ function AuthProvider({ children }) {
             }).then((response) => {
                 setUser(response.data);
                 storageUser(response.data);
+                setLoadingUpdate(false);
+                showToast("Atualizado com Sucesso!");
+                
+                
+            }).catch((error) => {
+                alert(error);
+                setLoadingUpdate(false);
             })
      }
 
@@ -132,7 +146,7 @@ function AuthProvider({ children }) {
 
     return (
 
-        <AuthContext.Provider value={{ signed: !!user, loading, loadingAuth, user, listBairros, signUp, signIn, signOut, signUpdate }}>
+        <AuthContext.Provider value={{ signed: !!user, loading, loadingAuth, loadingUpdate, user, listBairros, signUp, signIn, signOut, signUpdate }}>
             {children}
         </AuthContext.Provider>
 

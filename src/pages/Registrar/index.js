@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
-import { ActivityIndicator } from 'react-native';
+import { Keyboard } from 'react-native';
 import { AuthContext } from '../../contexts/auth';
 import Picker from '../../components/Picker';
 import imgLogo from '../../assets/Logo.png';
 import * as Animatable from 'react-native-animatable';
+import Indicator from '../../components/Indicator';
 import { Container, Form, FormInput, SubmitButton, LinkRegistrar, LinkRegistrarText } from './styles';
 
 export default function Registrar({ navigation }) {
@@ -28,15 +29,15 @@ export default function Registrar({ navigation }) {
     }, [listBairros]);
 
     if (!bairros) {
-        return <ActivityIndicator/>
+        return <Indicator/>
     }
     if (bairros && loading) {
         console.log("Bairros")
         setLoading(false);
     }
     function handleSubmit() {
+        Keyboard.dismiss();
         signUp(nome, email, bairro, password);
-        //navigation.navigate('Home');
     }
 
     return (

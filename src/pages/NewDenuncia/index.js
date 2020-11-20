@@ -2,10 +2,11 @@ import React, { useState, useEffect, useContext, useLayoutEffect } from 'react';
 import { Platform, Alert, PermissionsAndroid } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import { AuthContext } from '../../contexts/auth';
+import api from '../../services/api';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Picker from '../../components/Picker';
 import Indicator from '../../components/Indicator';
-import { Container, Label, Form, FormInput, ListFoto, SubmitButton, Title, AreaFoto, Descricao, ButtonFoto } from './styles';
+import { Container, Label, Form, FormInput, ViewFoto, SubmitButton, ButtonDelete, Img, AreaFoto, Descricao, ButtonFoto } from './styles';
 
 export default function NewDenuncia({ navigation }) {
 
@@ -16,26 +17,9 @@ export default function NewDenuncia({ navigation }) {
     const [loading, setLoading] = useState(true);
     const [disabled, setDisabled] = useState(true);
     const [denuncia, setDenuncia] = useState('');
-    const hasUnsavedChanges = Boolean(denuncia || bairro || fotos);
-    const [fotos, setFotos] = useState([
-        
-        require('../../assets/Background.png'),
-        require('../../assets/Logo.png'),
-        require('../../assets/medLogo.png'),
-        
-    ]);
-
-
-
-    useLayoutEffect(() => {
-        const options = navigation.setOptions({
-            headerRight: () => (
-                <SubmitButton disabled={disabled} onPress={() => handleSubmitDenuncia()} >
-                    <Title disabled={disabled}>Publicar</Title>
-                </SubmitButton>
-            )
-        })
-    }, [navigation, disabled]);
+    const [loadingDenuncia, setLoadingDenuncia] = useState(false);
+    const hasUnsavedChanges = Boolean(!disabled);
+    const [foto, setFoto] = useState(null);
 
 
     useEffect(() => {
@@ -75,8 +59,15 @@ export default function NewDenuncia({ navigation }) {
 
 
     function handleSubmit() {
-        alert("Add NewDenuncia");
+        /* setLoadingDenuncia(true);
+        api.post("denuncias",{
+           
+        }) */
+
+        alert("nova denuncia")
+        
     }
+
     if (!bairros) {
         return <Indicator />
     }
@@ -84,17 +75,8 @@ export default function NewDenuncia({ navigation }) {
         setLoading(false);
     }
 
-    function handleSubmitDenuncia() {
-        alert("Publicado")
-    }
-
-    
-
-    function renderItem({ item }) {
-        {/* <Foto
-            item={item}
-            onPress={() => setFotoSelected(item.id)}
-        /> */}
+    function handleDeleteImg(){
+        setFoto(null);
     }
 
     // função para checar a permissão de acessar a galeria de foto
@@ -114,28 +96,29 @@ export default function NewDenuncia({ navigation }) {
             return;
           }
         const options= {
-          title: "Selecione uma foto",
-          chooseFromLibraryButtonTitle: "Buscar foto do album...",
+          title: "Escolha uma opção",
+          takePhotoButtonTitle: "Tirar foto",
+          chooseFromLibraryButtonTitle: "Escolher foto na galeria",
+          cancelButtonTitle: "cancelar",
           noData: true,
           mediaType: "photo",
+          storageOptions: {
+            skipBackup: true,
+            path: 'denuncias',
+          },
         };
 
-        ImagePicker.launchImageLibrary(options, (response) => {
-            
+        ImagePicker.showImagePicker(options, (response) => {
         if (response.didCancel) {
 
           } else if (response.error) {
             console.log('Gerou erro: ' + response.error);
           } else {
-              const listFoto = fotos;
-              listFoto.push(response.uri);
-            setFotos(...fotos + response.uri);
-            console.log("Fotos: " + fotos);
+            setFoto(response.uri);
           }
         })
       }
-
-      //console.log(fotos);
+      console.log("Foto denuncia: " + foto);
     return (
         <Container
             behavior={Platform.OS === 'ios' ? 'padding' : ''}
@@ -151,32 +134,33 @@ export default function NewDenuncia({ navigation }) {
                     value={denuncia}
                     onChangeText={setDenuncia}
                 />
+                {
+                    foto && (
+                        <ViewFoto>
+                            <Img  source={{ uri: foto}}/> 
+                            <ButtonDelete onPress={handleDeleteImg}>
+                            <FontAwesome name="remove" color="#999999" size={25} />
+                            </ButtonDelete>
+                        </ViewFoto>
+
+                    )
+                }
 
             <AreaFoto>
                 <ButtonFoto onPress={openAlbum}>
                     <Descricao>
                         Adicionar foto a denúncia
                             </Descricao>
-                    <FontAwesome name="photo" color="#FFF" size={25} />
+                    <FontAwesome name="photo" color="#04BF9D" size={25} />
                 </ButtonFoto>
             </AreaFoto>
+
+            <SubmitButton 
+                onPress={handleSubmit}
+                loading={loadingDenuncia}>
+                    Publicar
+                </SubmitButton>
             </Form>
-            {
-        
-                   /*  fotos ?? (
-                        <ListFoto
-                            data={fotos}
-                            renderItem={renderItem}
-                        //keyExtractor={}
-                        //extraData={}
-
-                        />
-                    )
- */
-                }
-            
-
-
 
         </Container>
     );

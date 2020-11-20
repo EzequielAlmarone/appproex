@@ -1,8 +1,7 @@
 import React, { useRef, useState, useContext } from "react";
-import { Platform } from 'react-native';
+import { Platform, Keyboard } from 'react-native';
 import {AuthContext } from '../../contexts/auth';
 import imgLogo from '../../assets/Logo.png';
-import { ActivityIndicator } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { Container, Form, FormInput, SubmitButton, LinkRegistrar, LinkRegistrarText } from './styles';
 
@@ -14,6 +13,7 @@ function Login({ navigation }) {
 
 
     function handleSubmit() {
+        Keyboard.dismiss();
         signIn(email, password);
     }
     function handleRegistrar() {

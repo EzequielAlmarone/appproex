@@ -1,75 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
+import Indicator from '../../components/Indicator';
 import { SliderBox } from "react-native-image-slider-box";
-import { Container, List, EducacaoView, Titulo, Autor, ImageView, Descricao, DataView, Data } from './styles';
+import { Container, List, EducacaoView, Titulo, Autor, ImageView, Descricao, DataView, Data, ViewNotificacao, Notificacao } from './styles';
 
 export default function EducacaoAmbiental({ navigation }) {
-    const [educacoes, setEducacoes] = useState([
-      
-                {
-                    id: 1,
-                titulo: "Horta Organica",
-                autor: "Gerência de Meio Ambiente",
-                fotos: [
-                    require("../../assets/Background.png"),
-                    require("../../assets/Logo.png"),         
-                    require('../../assets/Logo.png'),
-                    'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?cs=srgb&dl=pexels-chevanon-photography-1108099.jpg&fm=jpg',
-                     ],
-                descricao: "    Apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
-                    + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
-                    + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
-                    + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
-                    + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
-                    + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí",
-                data: "12/09/2020"
-                },
-                {
-                    id: 2,
-                titulo: "Horta Organica",
-                autor: "Gerência de meio Ambiente",
-                fotos: [
-                    'https://images.pexels.com/photos/1660027/pexels-photo-1660027.jpeg?cs=srgb&dl=pexels-elle-hughes-1660027.jpg&fm=jpg',         
-                    'https://images.pexels.com/photos/1400172/pexels-photo-1400172.jpeg?cs=srgb&dl=pexels-adonyi-g%C3%A1bor-1400172.jpg&fm=jpg',
-                    'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?cs=srgb&dl=pexels-chevanon-photography-1108099.jpg&fm=jpg',
-                     ],
-                descricao: "    Apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
-                    + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
-                    + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
-                    + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
-                    + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí"
-                    + "apartir do dia 12/09/2020 estará iniciando um projeto de parceria com a gerencia de meio ambiente e a população de naviraí",
-                data: "12/09/2020"
-                }
-    ]);
-
+    const [educacoes, setEducacoes] = useState(null);
+    const [loading, setLoading] =useState(true);
 
     useEffect(() => {
         async function handleBuscarEducacoes() {
-            let response = await api.get('')
-                .then((response) => setEducacoes(response.data),
+            await api.get('educacoes')
+                .then((response) => {
+                    setEducacoes(response.data);
+                    setLoading(false);
+                }
             )
                 .catch((err) => {
                     console.error("ops! ocorreu um erro" + err);
+                    setLoading(false);
                 });
         }
-        // handleBuscarEducacoes();
+        handleBuscarEducacoes();
+        
     }, []);
 
     return (
+        
         <Container>
-            {educacoes && (
-                <List
+            {console.log()}
+            {loading ?
+            (
+                <Indicator/>
+            )
+            :
+            (
+                educacoes ? (<List
                     data={educacoes}
                     keyExtractor={item => item.id}
                     renderItem={({ item: educacao }) => (
                         <EducacaoView>
                             <Titulo>{educacao.titulo}</Titulo> 
-                            <Autor>Autor: {educacao.autor}</Autor>
-                            {educacao.fotos &&
+                            <Autor>Autor: {educacao.gestor.departamento.nome}</Autor>
+                           {educacao.foto &&
                             (                            
                             <ImageView>
-                                <SliderBox images={educacao.fotos}
+                                <SliderBox images={[educacao.foto]}
                                     resizeMode={'contain'}
                                     resizeMethod={'resize'} 
                                     dotColor = "#c1c1c1" //cor do ponto de paginação
@@ -86,8 +62,20 @@ export default function EducacaoAmbiental({ navigation }) {
                             </DataView>
                         </EducacaoView>
                     )}
-                /> 
-            )}
+                />
+                )
+                :
+                (
+                    <ViewNotificacao>
+                        <Notificacao>
+                        Não possui publicação!
+                        </Notificacao>
+                    </ViewNotificacao>
+                    
+                ) 
+
+            )
+        }
         </Container>
     )
 

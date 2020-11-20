@@ -1,6 +1,8 @@
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
+flex: 1;
+
 `;
 
 export const List = styled.FlatList.attrs({
@@ -45,7 +47,7 @@ margin-bottom : 10px;
 
 export const Descricao = styled.Text`
 color: #999;
-font-size: 20px;
+font-size: 18px;
 margin-bottom: 5px;
 padding: 5px;
 border-radius: 5px;
@@ -61,6 +63,18 @@ color: #999;
 font-size: 14px;
 margin-bottom: -10px;
 margin-right: -5px;
+
+`;
+
+export const ViewNotificacao = styled.View`
+flex:1;
+align-items: center;
+justify-content: center;
+`;
+
+export const Notificacao = styled.Text`
+font-size: 22px;
+color: #999;
 
 `;
 
