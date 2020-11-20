@@ -3,8 +3,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Login from '../pages/Login';
 import Registrar from '../pages/Registrar';
 
-
-
 const AuthStack = createStackNavigator();
 function AuthRoutes() {
     return (
