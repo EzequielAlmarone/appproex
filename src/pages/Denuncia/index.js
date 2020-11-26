@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
 import api from '../../services/api';
 import Indicator from '../../components/Indicator';
+import PostItem from '../../components/PostItem';
 import Feather from 'react-native-vector-icons/Feather';
 import { Container, ButtonAdd, List, DenunciaView, ViewFoto, Img, Header, Bairro, ViewNotificacao, Notificacao } from './styles';
 
@@ -50,14 +51,14 @@ export default function Denuncia({ navigation }) {
                   (
                     <List
                     data={denuncias}
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => String(item.id)}
                     renderItem={({ item: denuncia }) => (
-                        <DenunciaView>
-                            <Header>
-                                <Bairro>{denuncia.bairro.nome}</Bairro>
-                            </Header>
-
-                        </DenunciaView>
+                        <PostItem 
+                        titulo={denuncia.bairro.nome} 
+                        autor={denuncia.descricao}
+                        educacao={denuncia}
+                        route="PostDenuncia"
+                        />
                         )}
                     />
                   ) 

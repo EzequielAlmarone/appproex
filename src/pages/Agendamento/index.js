@@ -14,17 +14,19 @@ export default function Agendamento() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        console.log("Teste: " + user.bairro.id);
         async function handleBuscarAgendamentos() {
-           await api.get(`agendamentos/bairro/${user.bairro.id}`).then((response)=>{
+           await api.get(`agendamentos/bairro/${user.bairro.id}`)
+            .then((response)=>{
                  setAgendamentos(response.data);
                  console.log("Valor Agendamentos: " + response.data);
                 setLoading(false); 
             }).catch((error) => {
-                 Alert.alert("Aviso!", "Seu bairro não possui agendamento de coleta",
+                Alert.alert("Aviso!", 
+                            "Seu bairro não possui agendamento de coleta",
             [
                 {
-                    text: "Ok", style: 'destructive', onPress: () => { setLoading(false)}
+                    text: "Ok", style: 'destructive', 
+                    onPress: () => { setLoading(false)}
                 }
             ]); 
             });
@@ -47,10 +49,12 @@ export default function Agendamento() {
                         <Bairro>{user.bairro.nome}</Bairro>
                     <List
                         data={agendamentos}
-                        keyExtractor={item => item.id}
+                        keyExtractor={item => String(item.id)}
                         renderItem={({ item: agendamento }) => (
                             <AgendamentoView>
-                                <TipoColeta>{agendamento.tipoColeta}</TipoColeta>
+                                <TipoColeta>
+                                    {agendamento.tipoColeta}
+                                    </TipoColeta>
                                 <DiaSemana>
                                     {`${agendamento.diaSemana} ${agendamento.horario}`}
                                 </DiaSemana>
@@ -69,4 +73,6 @@ export default function Agendamento() {
         </Container>
     )
 }
+
+
 

@@ -44,7 +44,7 @@ export default function Profile({ navigation }) {
         }else{
             setHasUnsavedChanges(false);
         }
-    },[nome, email, bairro]);
+    },[user]);
 
     //verifica se teve alteração quando o usuario desejar volta sem salvar
     useEffect(() => {

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Image } from 'react-native';
 import api from '../../services/api';
 import Indicator from '../../components/Indicator';
-import { SliderBox } from "react-native-image-slider-box";
-import { Container, List, EducacaoView, Titulo, Autor, ImageView, Descricao, DataView, Data, ViewNotificacao, Notificacao } from './styles';
+import PostItem from '../../components/PostItem';
+
+import { Container, List, ViewNotificacao, Notificacao } from './styles';
 
 export default function EducacaoAmbiental({ navigation }) {
     const [educacoes, setEducacoes] = useState(null);
@@ -22,13 +24,10 @@ export default function EducacaoAmbiental({ navigation }) {
                 });
         }
         handleBuscarEducacoes();
-        
     }, []);
-
     return (
         
         <Container>
-            {console.log()}
             {loading ?
             (
                 <Indicator/>
@@ -37,30 +36,14 @@ export default function EducacaoAmbiental({ navigation }) {
             (
                 educacoes ? (<List
                     data={educacoes}
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => String(item.id) }
                     renderItem={({ item: educacao }) => (
-                        <EducacaoView>
-                            <Titulo>{educacao.titulo}</Titulo> 
-                            <Autor>Autor: {educacao.gestor.departamento.nome}</Autor>
-                           {educacao.foto &&
-                            (                            
-                            <ImageView>
-                                <SliderBox images={[educacao.foto]}
-                                    resizeMode={'contain'}
-                                    resizeMethod={'resize'} 
-                                    dotColor = "#c1c1c1" //cor do ponto de paginação
-                                    inactiveDotColor = "#4d4c4a" // cor dos pontos de paginações inativos
-                                    imageLoadingColor = "#04BF9D" // cor do loading da imagem
-                                    ImageComponentStyle = {{borderRadius: 15}} // borda imagem
-                                />
-                            </ImageView>       
-                            )
-                            }
-                            <Descricao>{educacao.descricao}</Descricao>
-                            <DataView>
-                                <Data> publicação: {educacao.data}</Data>
-                            </DataView>
-                        </EducacaoView>
+                        <PostItem 
+                        titulo={educacao.titulo} 
+                        autor={educacao.gestor.departamento.nome}
+                        educacao={educacao}
+                        route="PostEducacao"
+                        />
                     )}
                 />
                 )

@@ -18,7 +18,7 @@ background-color: #F2F5F8;
 export const BairroView = styled.View`
 background-color: #F2F5F8;
 border-radius: 16px;
-border-width: 2;
+border-width: 2px;
 border-color: #04BF9D;
 margin: 15px 15px 50px 15px;
 `;

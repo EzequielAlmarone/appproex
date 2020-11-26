@@ -3,14 +3,17 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Feather from 'react-native-vector-icons/Feather';
 
-
 import Home from '../pages/Home';
 import Agendamento from '../pages/Agendamento';
 import EducacaoAmbiental from '../pages/EducacaoAmbiental';
+import PostEducacao from '../pages/EducacaoAmbiental/PostEducacao';
 import Acao from '../pages/Acao';
+import PostAcao from '../pages/Acao/PostAcao';
 import Denuncia from '../pages/Denuncia';
+import PostDenuncia from '../pages/Denuncia/PostDenuncia';
 import NewDenuncia from '../pages/NewDenuncia';
 import Profile from '../pages/Profile';
+
 
 
 const Tap = createBottomTabNavigator();
@@ -38,7 +41,6 @@ function StackProfile(){
     </Stack.Navigator>
     )
 }
-
 function StackNewDenuncia(){
     return(
     <Stack.Navigator>
@@ -153,10 +155,54 @@ function StackScreen() {
         
                 }}
             />
+            <Stack.Screen
+                name="PostEducacao"
+                component={PostEducacao}
+                options={{
+                    headerStyle: {
+                        backgroundColor: "rgba(4, 191, 157, 0.16)",
+                        height: 100,
+                        borderBottomEndRadius: 50,
+                        borderBottomStartRadius: 50
+                    },
+                    headerTintColor: '#04BF9D',
+                    headerBackTitleVisible: false,
+                    title: " Post Educação Ambiental"     
+                }}
+            />
+            <Stack.Screen
+                name="PostDenuncia"
+                component={PostDenuncia}
+                options={{
+                    headerStyle: {
+                        backgroundColor: "rgba(4, 191, 157, 0.16)",
+                        height: 100,
+                        borderBottomEndRadius: 50,
+                        borderBottomStartRadius: 50
+                    },
+                    headerTintColor: '#04BF9D',
+                    headerBackTitleVisible: false,
+                    title: "Post Denúncia"
+                }}
+            />
+            <Stack.Screen
+                name="PostAcao"
+                component={PostAcao}
+                options={{
+                    headerStyle: {
+                        backgroundColor: "rgba(4, 191, 157, 0.16)",
+                        height: 100,
+                        borderBottomEndRadius: 50,
+                        borderBottomStartRadius: 50
+                    },
+                    headerTintColor: '#04BF9D',
+                    headerBackTitleVisible: false,
+                    title: "Post Acão"
+                }}
+            />
         </Stack.Navigator>
     )
 }
-
 function AppRoutes() {
     return (
         <Tap.Navigator initialRouteName="Home"
@@ -200,3 +246,7 @@ function AppRoutes() {
     )
 }
 export default AppRoutes;
+
+
+
+

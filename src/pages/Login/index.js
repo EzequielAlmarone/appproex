@@ -4,6 +4,7 @@ import {AuthContext } from '../../contexts/auth';
 import imgLogo from '../../assets/Logo.png';
 import * as Animatable from 'react-native-animatable';
 import { Container, Form, FormInput, SubmitButton, LinkRegistrar, LinkRegistrarText } from './styles';
+import { set } from "react-native-reanimated";
 
 function Login({ navigation }) {
     const { signIn, loadingAuth } = useContext(AuthContext);
@@ -11,10 +12,12 @@ function Login({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-
     function handleSubmit() {
         Keyboard.dismiss();
-        signIn(email, password);
+        if(!signIn(email, password)){
+            setEmail('');
+            setPassword('');
+        }
     }
     function handleRegistrar() {
         navigation.navigate('Registrar');

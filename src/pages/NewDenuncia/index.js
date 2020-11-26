@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useLayoutEffect } from 'react';
-import { Platform, Alert, PermissionsAndroid } from 'react-native';
+import { Platform, Alert, PermissionsAndroid, ToastAndroid } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import { AuthContext } from '../../contexts/auth';
 import api from '../../services/api';
@@ -10,7 +10,7 @@ import { Container, Label, Form, FormInput, ViewFoto, SubmitButton, ButtonDelete
 
 export default function NewDenuncia({ navigation }) {
 
-    const { listBairros } = useContext(AuthContext);
+    const { user, listBairros } = useContext(AuthContext);
 
     const [bairro, setBairro] = useState('');
     const [bairros, setBairros] = useState(null);
@@ -18,7 +18,7 @@ export default function NewDenuncia({ navigation }) {
     const [disabled, setDisabled] = useState(true);
     const [denuncia, setDenuncia] = useState('');
     const [loadingDenuncia, setLoadingDenuncia] = useState(false);
-    const hasUnsavedChanges = Boolean(!disabled);
+    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(!disabled);
     const [foto, setFoto] = useState(null);
 
 
@@ -35,7 +35,6 @@ export default function NewDenuncia({ navigation }) {
     }, [listBairros, denuncia]);
 
     useEffect(() => {
-        console.log(navigation );
         navigation.addListener('beforeRemove', (e) => {
             if(!hasUnsavedChanges){
                 console.log("saiu" + hasUnsavedChanges);
@@ -56,17 +55,30 @@ export default function NewDenuncia({ navigation }) {
         })
     }, [navigation, hasUnsavedChanges]);
 
-
-
+    //Função toast messagem
+    const showToast = (message) => {
+        ToastAndroid.show(message, ToastAndroid.SHORT);
+      };
     function handleSubmit() {
-        /* setLoadingDenuncia(true);
-        api.post("denuncias",{
-           
-        }) */
-
-        alert("nova denuncia")
-        
+         setLoadingDenuncia(true);
+         let data = {
+            descricao: denuncia,
+            foto: foto,
+            bairro: listBairros[bairro],
+            usuario: user,
+            data: new Date()
+         }
+         console.log(data);
+         api.post("denuncias", data)
+         .then(() => {
+            setHasUnsavedChanges(false)
+            setLoadingDenuncia(false);
+            showToast("Denúncia cadastrada com sucesso!");
+            navigation.navigate("Denuncia");     
+         }) 
     }
+            
+        
 
     if (!bairros) {
         return <Indicator />

@@ -1,22 +1,16 @@
 import React, { useState, createContext, useEffect } from 'react';
 import {ToastAndroid } from 'react-native';
-
 import api from '../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Alert } from 'react-native';
 
 export const AuthContext = createContext({});
 function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [listBairros, setListBairros] = useState([]);
-    const[loadingBairro, setLoadingBairro] = useState(true);
     const [loading, setLoading] = useState(true);
     const [loadingAuth, setLoadingAuth] = useState(false);
     const [loadingUpdate, setLoadingUpdate] = useState(false);
-
-
     useEffect(() => {
-
         // buscar lista de bairros 
         async function buscarBairros() {
             await api.get('bairros')
@@ -30,7 +24,7 @@ function AuthProvider({ children }) {
                     alert(error)
                 });
         }
-
+        // Função buscar usuário salvos ao AsyncStorage
         async function loadStorageUser(){
             const storageUser = await AsyncStorage.getItem('reciclaNavirai');
             if(storageUser){
@@ -39,25 +33,21 @@ function AuthProvider({ children }) {
             }
             setLoading(false);
         }
-
+        //Função buscar bairros salvos ao AsyncStorage
         async function loadStorage() {
             const storageBairros = await AsyncStorage.getItem('bairros');
             if (storageBairros) {
                 setListBairros(JSON.parse(storageBairros));
-                setLoadingBairro(false);
             }
-            setLoadingBairro(false);
         }
         buscarBairros();
         loadStorage();
         loadStorageUser();
     }, []);
-
     //Função toast messagem
         const showToast = (message) => {
           ToastAndroid.show(message, ToastAndroid.SHORT);
         };
-
     // Função de Login 
     async function signIn(email, password) {
         console.log("login");
@@ -69,16 +59,15 @@ function AuthProvider({ children }) {
             }).then((response)=>{
                 setUser(response.data);
                 storageUser(response.data);
-                setLoadingAuth(false);
+                setLoadingAuth(false);  
             }).catch( (error) => {
-                alert(error);
+                alert("Email ou Senha incorreto!");
                 setLoadingAuth(false);
             }) 
         }else{
             alert("Preencha os campos corretamente!")
         }
     }
-
     // Função de Registrar novo Usuário
     async function signUp(nome, email, bairro, password) {     
         console.log("bairro signup: " + bairro);
@@ -94,7 +83,7 @@ function AuthProvider({ children }) {
                 storageUser(response.data);
                 setLoadingAuth(false);
             }).catch((error) => {
-                alert(error);
+                alert(error.response.data);
                 setLoadingAuth(false);
             }) 
         }else{
@@ -108,7 +97,6 @@ function AuthProvider({ children }) {
                 setUser(null);
             })
     }
-
     //função atualizar o usuário 
      async function signUpdate(nomeUp,bairroUp){
             setLoadingUpdate(true);
@@ -132,25 +120,29 @@ function AuthProvider({ children }) {
                 setLoadingUpdate(false);
             })
      }
-
     // salvar o usuario logado no asyncStorage
-
     async function storageUser(data) {
         await AsyncStorage.setItem('reciclaNavirai', JSON.stringify(data));
     }
-
     // salvar os bairros no asyncStorage
     async function storageBairro(data) {
         await AsyncStorage.setItem('bairros', JSON.stringify(data));
     }
-
     return (
-
-        <AuthContext.Provider value={{ signed: !!user, loading, loadingAuth, loadingUpdate, user, listBairros, signUp, signIn, signOut, signUpdate }}>
+        <AuthContext.Provider value={{ 
+            signed: !!user, 
+            loading, 
+            loadingAuth, 
+            loadingUpdate,
+            user, 
+            listBairros, 
+            signUp, 
+            signIn, 
+            signOut, 
+            signUpdate }}>
             {children}
         </AuthContext.Provider>
-
     );
 }
-
 export default AuthProvider;
+
