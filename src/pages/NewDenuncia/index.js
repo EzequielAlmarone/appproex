@@ -12,7 +12,7 @@ export default function NewDenuncia({ navigation }) {
 
     const { user, listBairros } = useContext(AuthContext);
 
-    const [bairro, setBairro] = useState('');
+    const [bairro, setBairro] = useState(0);
     const [bairros, setBairros] = useState(null);
     const [loading, setLoading] = useState(true);
     const [disabled, setDisabled] = useState(true);
@@ -23,9 +23,9 @@ export default function NewDenuncia({ navigation }) {
 
 
     useEffect(() => {
-            if (listBairros) {
-                setBairros(listBairros);
-            }
+        if (listBairros) {
+            setBairros(listBairros);
+        }
         if (denuncia !== '') {
 
             setDisabled(false);
@@ -36,7 +36,7 @@ export default function NewDenuncia({ navigation }) {
 
     useEffect(() => {
         navigation.addListener('beforeRemove', (e) => {
-            if(!hasUnsavedChanges){
+            if (!hasUnsavedChanges) {
                 console.log("saiu" + hasUnsavedChanges);
                 return;
             }
@@ -44,41 +44,41 @@ export default function NewDenuncia({ navigation }) {
             e.preventDefault();
 
             Alert.alert("Deseja sair sem salvar?", "Você tem alterações não salvas. Tem certeza de que deseja descartá-los e sair da tela?",
-            [
-                {
-                    text: "Cancelar", style: 'cancel', onPress: () => {}
-                },
-                {
-                    text: "Sair sem salvar", style: "destructive", onPress: () => navigation.dispatch(e.data.action),
-                }
-            ])
+                [
+                    {
+                        text: "Cancelar", style: 'cancel', onPress: () => { }
+                    },
+                    {
+                        text: "Sair sem salvar", style: "destructive", onPress: () => navigation.dispatch(e.data.action),
+                    }
+                ])
         })
     }, [navigation, hasUnsavedChanges]);
 
     //Função toast messagem
     const showToast = (message) => {
         ToastAndroid.show(message, ToastAndroid.SHORT);
-      };
+    };
     function handleSubmit() {
-         setLoadingDenuncia(true);
-         let data = {
+        setLoadingDenuncia(true);
+        let data = {
             descricao: denuncia,
             foto: foto,
             bairro: listBairros[bairro],
             usuario: user,
             data: new Date()
-         }
-         console.log(data);
-         api.post("denuncias", data)
-         .then(() => {
-            setHasUnsavedChanges(false)
-            setLoadingDenuncia(false);
-            showToast("Denúncia cadastrada com sucesso!");
-            navigation.navigate("Denuncia");     
-         }) 
+        }
+        console.log(data);
+        api.post("denuncias", data)
+            .then(() => {
+                setHasUnsavedChanges(false)
+                setLoadingDenuncia(false);
+                showToast("Denúncia cadastrada com sucesso!");
+                navigation.navigate("Denuncia");
+            })
     }
-            
-        
+
+
 
     if (!bairros) {
         return <Indicator />
@@ -87,7 +87,7 @@ export default function NewDenuncia({ navigation }) {
         setLoading(false);
     }
 
-    function handleDeleteImg(){
+    function handleDeleteImg() {
         setFoto(null);
     }
 
@@ -96,41 +96,41 @@ export default function NewDenuncia({ navigation }) {
         const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
         const hasPermission = await PermissionsAndroid.check(permission);
         if (hasPermission) {
-          return true;
+            return true;
         }
         const status = await PermissionsAndroid.request(permission);
         return status === 'granted';
-      }
+    }
 
-      // função para abrir a galeria de foto
-    async function openAlbum(){
-        if (Platform.OS === 'android' && !(await hasAndroidPermission())){
+    // função para abrir a galeria de foto
+    async function openAlbum() {
+        if (Platform.OS === 'android' && !(await hasAndroidPermission())) {
             return;
-          }
-        const options= {
-          title: "Escolha uma opção",
-          takePhotoButtonTitle: "Tirar foto",
-          chooseFromLibraryButtonTitle: "Escolher foto na galeria",
-          cancelButtonTitle: "cancelar",
-          noData: true,
-          mediaType: "photo",
-          storageOptions: {
-            skipBackup: true,
-            path: 'denuncias',
-          },
+        }
+        const options = {
+            title: "Escolha uma opção",
+            takePhotoButtonTitle: "Tirar foto",
+            chooseFromLibraryButtonTitle: "Escolher foto na galeria",
+            cancelButtonTitle: "cancelar",
+            noData: true,
+            mediaType: "photo",
+            storageOptions: {
+                skipBackup: true,
+                path: 'denuncias',
+            },
         };
 
         ImagePicker.showImagePicker(options, (response) => {
-        if (response.didCancel) {
+            if (response.didCancel) {
 
-          } else if (response.error) {
-            console.log('Gerou erro: ' + response.error);
-          } else {
-            setFoto(response.uri);
-          }
+            } else if (response.error) {
+                console.log('Gerou erro: ' + response.error);
+            } else {
+                setFoto(response.uri);
+            }
         })
-      }
-      console.log("Foto denuncia: " + foto);
+    }
+    console.log("Foto denuncia: " + foto);
     return (
         <Container
             behavior={Platform.OS === 'ios' ? 'padding' : ''}
@@ -149,27 +149,27 @@ export default function NewDenuncia({ navigation }) {
                 {
                     foto && (
                         <ViewFoto>
-                            <Img  source={{ uri: foto}}/> 
+                            <Img source={{ uri: foto }} />
                             <ButtonDelete onPress={handleDeleteImg}>
-                            <FontAwesome name="remove" color="#999999" size={25} />
+                                <FontAwesome name="remove" color="#999999" size={25} />
                             </ButtonDelete>
                         </ViewFoto>
 
                     )
                 }
 
-            <AreaFoto>
-                <ButtonFoto onPress={openAlbum}>
-                    <Descricao>
-                        Adicionar foto a denúncia
+                <AreaFoto>
+                    <ButtonFoto onPress={openAlbum}>
+                        <Descricao>
+                            Adicionar foto a denúncia
                             </Descricao>
-                    <FontAwesome name="photo" color="#04BF9D" size={25} />
-                </ButtonFoto>
-            </AreaFoto>
+                        <FontAwesome name="photo" color="#04BF9D" size={25} />
+                    </ButtonFoto>
+                </AreaFoto>
 
-            <SubmitButton 
-                onPress={handleSubmit}
-                loading={loadingDenuncia}>
+                <SubmitButton
+                    onPress={handleSubmit}
+                    loading={loadingDenuncia}>
                     Publicar
                 </SubmitButton>
             </Form>

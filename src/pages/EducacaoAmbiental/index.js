@@ -8,7 +8,7 @@ import { Container, List, ViewNotificacao, Notificacao } from './styles';
 
 export default function EducacaoAmbiental({ navigation }) {
     const [educacoes, setEducacoes] = useState(null);
-    const [loading, setLoading] =useState(true);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         async function handleBuscarEducacoes() {
@@ -17,7 +17,7 @@ export default function EducacaoAmbiental({ navigation }) {
                     setEducacoes(response.data);
                     setLoading(false);
                 }
-            )
+                )
                 .catch((err) => {
                     console.error("ops! ocorreu um erro" + err);
                     setLoading(false);
@@ -26,39 +26,39 @@ export default function EducacaoAmbiental({ navigation }) {
         handleBuscarEducacoes();
     }, []);
     return (
-        
+
         <Container>
             {loading ?
-            (
-                <Indicator/>
-            )
-            :
-            (
-                educacoes ? (<List
-                    data={educacoes}
-                    keyExtractor={item => String(item.id) }
-                    renderItem={({ item: educacao }) => (
-                        <PostItem 
-                        titulo={educacao.titulo} 
-                        autor={educacao.gestor.departamento.nome}
-                        educacao={educacao}
-                        route="PostEducacao"
-                        />
-                    )}
-                />
+                (
+                    <Indicator />
                 )
                 :
                 (
-                    <ViewNotificacao>
-                        <Notificacao>
-                        Não possui publicação!
+                    educacoes ? (<List
+                        data={educacoes}
+                        keyExtractor={item => String(item.id)}
+                        renderItem={({ item: educacao }) => (
+                            <PostItem
+                                titulo={educacao.titulo}
+                                autor={educacao.gestor.departamento.nome}
+                                educacao={educacao}
+                                route="PostEducacao"
+                            />
+                        )}
+                    />
+                    )
+                        :
+                        (
+                            <ViewNotificacao>
+                                <Notificacao>
+                                    Não possui publicação!
                         </Notificacao>
-                    </ViewNotificacao>
-                    
-                ) 
+                            </ViewNotificacao>
 
-            )
-        }
+                        )
+
+                )
+            }
         </Container>
     )
 

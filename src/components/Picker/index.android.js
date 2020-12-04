@@ -20,7 +20,7 @@ export default function Picker({ onChange, tipo, bairros }) {
                     color: '#999999',
                     marginLeft: 5,
                 }}
-                
+
                 prompt="Selecione seu bairro"
                 selectedValue={tipo}
                 onValueChange={(valorSelecionado) => onChange(valorSelecionado)}
@@ -30,4 +30,4 @@ export default function Picker({ onChange, tipo, bairros }) {
         </PickerView>
     )
 
-} 
+}

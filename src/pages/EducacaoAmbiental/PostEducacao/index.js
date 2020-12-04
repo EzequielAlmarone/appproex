@@ -16,7 +16,7 @@ export default function PostEducacao({ route }){
   return(
       <Container>
           <AreaPost>
-                <EducacaoView>
+<EducacaoView>
                     <Titulo>{educacao.titulo}</Titulo> 
                     <Autor>Autor: {educacao.gestor.departamento.nome}</Autor>
                     {educacao.fotos &&

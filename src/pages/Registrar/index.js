@@ -11,14 +11,12 @@ export default function Registrar({ navigation }) {
     const { signUp, listBairros, loadingAuth } = useContext(AuthContext);
     const emailRef = useRef();
     const passwordRef = useRef();
-
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
     const [bairro, setBairro] = useState(0);
     const [password, setPassword] = useState('');
     const [bairros, setBairros] = useState(null);
     const [loading, setLoading] = useState(true);
-
 
     useEffect(() => {
 
@@ -29,7 +27,7 @@ export default function Registrar({ navigation }) {
     }, [listBairros]);
 
     if (!bairros) {
-        return <Indicator/>
+        return <Indicator />
     }
     if (bairros && loading) {
         console.log("Bairros")
@@ -86,10 +84,10 @@ export default function Registrar({ navigation }) {
                 />
 
                 <SubmitButton
-                 onPress={handleSubmit}
-                 loading={loadingAuth}
-                 >
-                        Cadastrar      
+                    onPress={handleSubmit}
+                    loading={loadingAuth}
+                >
+                    Cadastrar
                  </SubmitButton>
             </Form>
             <LinkRegistrar onPress={() => navigation.goBack()}>

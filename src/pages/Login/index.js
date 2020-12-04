@@ -1,10 +1,9 @@
 import React, { useRef, useState, useContext } from "react";
 import { Platform, Keyboard } from 'react-native';
-import {AuthContext } from '../../contexts/auth';
+import { AuthContext } from '../../contexts/auth';
 import imgLogo from '../../assets/Logo.png';
 import * as Animatable from 'react-native-animatable';
 import { Container, Form, FormInput, SubmitButton, LinkRegistrar, LinkRegistrarText } from './styles';
-import { set } from "react-native-reanimated";
 
 function Login({ navigation }) {
     const { signIn, loadingAuth } = useContext(AuthContext);
@@ -14,7 +13,7 @@ function Login({ navigation }) {
 
     function handleSubmit() {
         Keyboard.dismiss();
-        if(!signIn(email, password)){
+        if (!signIn(email, password)) {
             setEmail('');
             setPassword('');
         }
@@ -50,9 +49,9 @@ function Login({ navigation }) {
                     onChangeText={setPassword}
                 />
 
-                <SubmitButton 
-                onPress={handleSubmit}
-                loading={loadingAuth}
+                <SubmitButton
+                    onPress={handleSubmit}
+                    loading={loadingAuth}
                 >
                     Acessar
                     </SubmitButton>

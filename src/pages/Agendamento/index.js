@@ -3,10 +3,10 @@ import { Alert } from 'react-native';
 import api from '../../services/api';
 import { AuthContext } from '../../contexts/auth';
 import Indicador from '../../components/Indicator';
-import { 
-    Container, List, BairroView, AgendamentoView, 
-    Bairro, DiaSemana, TipoColeta, AreaInfo, Info 
-        } from './styles';
+import {
+    Container, List, BairroView, AgendamentoView,
+    Bairro, DiaSemana, TipoColeta, AreaInfo, Info
+} from './styles';
 
 export default function Agendamento() {
     const { user } = useContext(AuthContext);
@@ -15,61 +15,61 @@ export default function Agendamento() {
 
     useEffect(() => {
         async function handleBuscarAgendamentos() {
-           await api.get(`agendamentos/bairro/${user.bairro.id}`)
-            .then((response)=>{
-                 setAgendamentos(response.data);
-                 console.log("Valor Agendamentos: " + response.data);
-                setLoading(false); 
-            }).catch((error) => {
-                Alert.alert("Aviso!", 
-                            "Seu bairro não possui agendamento de coleta",
-            [
-                {
-                    text: "Ok", style: 'destructive', 
-                    onPress: () => { setLoading(false)}
-                }
-            ]); 
-            });
+            await api.get(`agendamentos/bairro/${user.bairro.id}`)
+                .then((response) => {
+                    setAgendamentos(response.data);
+                    console.log("Valor Agendamentos: " + response.data);
+                    setLoading(false);
+                }).catch((error) => {
+                    Alert.alert("Aviso!",
+                        "Seu bairro não possui agendamento de coleta",
+                        [
+                            {
+                                text: "Ok", style: 'destructive',
+                                onPress: () => { setLoading(false) }
+                            }
+                        ]);
+                });
         }
         handleBuscarAgendamentos();
     }, []);
 
     return (
         <Container>
-            { loading 
-            ? 
-            (
-                <Indicador/>
-            ) 
-            :
-            ( 
-                agendamentos.length !== 0 ? 
+            { loading
+                ?
                 (
-                    <BairroView>
-                        <Bairro>{user.bairro.nome}</Bairro>
-                    <List
-                        data={agendamentos}
-                        keyExtractor={item => String(item.id)}
-                        renderItem={({ item: agendamento }) => (
-                            <AgendamentoView>
-                                <TipoColeta>
-                                    {agendamento.tipoColeta}
-                                    </TipoColeta>
-                                <DiaSemana>
-                                    {`${agendamento.diaSemana} ${agendamento.horario}`}
-                                </DiaSemana>
-                            </AgendamentoView>
-                        )}
-                    />
-                    </BairroView>
-                ):
-                (
-                    <AreaInfo>
-                        <Info>Não possui Agendamentos</Info>
-                    </AreaInfo>  
+                    <Indicador />
                 )
-            )
-        }
+                :
+                (
+                    agendamentos.length !== 0 ?
+                        (
+                            <BairroView>
+                                <Bairro>{user.bairro.nome}</Bairro>
+                                <List
+                                    data={agendamentos}
+                                    keyExtractor={item => String(item.id)}
+                                    renderItem={({ item: agendamento }) => (
+                                        <AgendamentoView>
+                                            <TipoColeta>
+                                                {agendamento.tipoColeta}
+                                            </TipoColeta>
+                                            <DiaSemana>
+                                                {`${agendamento.diaSemana} ${agendamento.horario}`}
+                                            </DiaSemana>
+                                        </AgendamentoView>
+                                    )}
+                                />
+                            </BairroView>
+                        ) :
+                        (
+                            <AreaInfo>
+                                <Info>Não possui Agendamentos</Info>
+                            </AreaInfo>
+                        )
+                )
+            }
         </Container>
     )
 }
