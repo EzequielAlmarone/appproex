@@ -43,7 +43,7 @@ export default function Acao({ navigation }) {
                 )
                 :
                 (
-                    acoes ? (<List
+                    acoes.length !== 0 ? (<List
                         data={acoes}
                         keyExtractor={item => String(item.id)}
                         renderItem={({ item: acao }) => (

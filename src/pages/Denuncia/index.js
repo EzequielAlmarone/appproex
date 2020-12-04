@@ -47,7 +47,6 @@ export default function Denuncia({ navigation }) {
                     )
                     :
                     (
-
                         denuncias.length !== 0 ?
                             (
                                 <List

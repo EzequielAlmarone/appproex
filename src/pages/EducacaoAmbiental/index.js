@@ -34,7 +34,7 @@ export default function EducacaoAmbiental({ navigation }) {
                 )
                 :
                 (
-                    educacoes ? (<List
+                    educacoes.length !== 0 ? (<List
                         data={educacoes}
                         keyExtractor={item => String(item.id)}
                         renderItem={({ item: educacao }) => (

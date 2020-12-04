@@ -130,7 +130,6 @@ export default function NewDenuncia({ navigation }) {
             }
         })
     }
-    console.log("Foto denuncia: " + foto);
     return (
         <Container
             behavior={Platform.OS === 'ios' ? 'padding' : ''}
